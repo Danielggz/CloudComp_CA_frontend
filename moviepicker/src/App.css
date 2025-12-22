@@ -12,3 +12,12 @@
 .alert-fade.show { 
   opacity: 1; 
 }
+
+/* title for modal */
+.pickedModalTitle {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-family: "Georgia", serif;   /* or any font you prefer */
+  color: #b22222;                  /* deep red, looks cinematic */
+  text-align: center;
+}

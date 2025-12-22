@@ -1,14 +1,19 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-import Movie from './Movie'
 import Movie_new from './Movie_new'
 import Movie_edit from './Movie_edit'
+import Movie_picked from './Movie_picked'
 
 function Movielist(){
 
     const [movieList, setMovieList] = useState([]);
+    //Edit Modal
     const [editingId, setEditingId] = useState<number | null>(null)
+    //Create modal
     const [showModal, setShowModal] = useState(false)
+    //Picked modal
+    const [pickedMovie, setPickedMovie] = useState(null) 
+    const [showPickedModal, setShowPickedModal] = useState(false)
 
     // message and fading in and out
     const [successMessage, setSuccessMessage] = useState("")
@@ -19,7 +24,6 @@ function Movielist(){
     function getMovies(){
         axios.get("http://localhost:3000/movies",
             {headers: {Accept: "application/json"}}).then(response => {
-                console.log("The data: " + response.data);
                 setMovieList(response.data);
             })
             .catch(error => {
@@ -33,12 +37,31 @@ function Movielist(){
         .catch(error => {console.error("Error deleting movie", error)})
     }
 
+    function picker(){
+        axios.get("http://localhost:3000/movies/moviePicker",
+            {headers: {Accept: "application/json"}}).then(response => {
+                console.log(response.data)
+                setPickedMovie(response.data)
+                setShowPickedModal(true)
+            })
+            .catch(error => {
+                console.error("Error fetching results from movies", error);
+            })
+    }
+
     return ( 
         <div className="container">
 
-            <div className="d-flex justify-content-center mb-3">
-                <button className="btn btn-primary" onClick={() => setShowModal(true)}>Add New Movie </button>
+            <div className="d-flex justify-content-center gap-3 mb-4">
+                <button className="btn btn-lg btn-success px-4" onClick={() => setShowModal(true)}>
+                    Add New Movie
+                </button>
+
+                <button className="btn btn-lg btn-warning px-4" onClick={picker}>
+                    Pick a Movie to watch
+                </button>
             </div>
+
 
             {/* CREATE MODAL */}
             {showModal && (
@@ -104,6 +127,14 @@ function Movielist(){
                     </div>
                 </div>
             )}
+
+            {showPickedModal && pickedMovie && (
+            <Movie_picked
+                res={pickedMovie}
+                onClose={() => setShowPickedModal(false)}
+            />
+            )}
+
 
 
 
