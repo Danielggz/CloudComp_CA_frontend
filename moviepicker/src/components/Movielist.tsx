@@ -2,12 +2,17 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 import Movie from './Movie'
 import Movie_new from './Movie_new'
+import Movie_edit from './Movie_edit'
 
 function Movielist(){
 
     const [movieList, setMovieList] = useState([]);
     const [editingId, setEditingId] = useState<number | null>(null)
     const [showModal, setShowModal] = useState(false)
+
+    // message and fading in and out
+    const [successMessage, setSuccessMessage] = useState("")
+    const [showSuccess, setShowSuccess] = useState(false)
 
     useEffect(getMovies, []);
 
@@ -35,6 +40,7 @@ function Movielist(){
                 <button className="btn btn-primary" onClick={() => setShowModal(true)}>Add New Movie </button>
             </div>
 
+            {/* CREATE MODAL */}
             {showModal && (
                 <div className="modal fade show" style={{ display: 'block', background: 'rgba(0,0,0,0.5)' }} >
                     <div className="modal-dialog">
@@ -47,9 +53,17 @@ function Movielist(){
                         </div>
 
                         <div className="modal-body">
-                        <Movie_new onCreated={() => {
+                        <Movie_new onCreated={(title: string) => {
                             getMovies()
                             setShowModal(false)
+
+                            setSuccessMessage(`${title} added to the list!`)
+                            setShowSuccess(true)
+
+                            // Fade out after 3 seconds 
+                            setTimeout(() => setShowSuccess(false), 3000) 
+                            // Remove message entirely after fade-out completes 
+                            setTimeout(() => setSuccessMessage(""), 3600)
                             }}
                         />
                         </div>
@@ -59,7 +73,45 @@ function Movielist(){
                 </div>
             )}
             
-             
+            {/* EDIT MODAL */}
+            {editingId && (
+                <div className="modal fade show" style={{ display: 'block', background: 'rgba(0,0,0,0.5)' }}>
+                    <div className="modal-dialog">
+                    <div className="modal-content">
+
+                        <div className="modal-header">
+                        <h5 className="modal-title">Edit Movie</h5>
+                        <button type="button" className="btn-close" onClick={() => setEditingId(null)}></button>
+                        </div>
+
+                        <div className="modal-body">
+                        <Movie_edit
+                            movieId={editingId}
+                            onUpdated={(title: string) => {
+                            getMovies()
+                            setEditingId(null)
+
+                            setSuccessMessage(`${title} updated successfully`)
+                            setShowSuccess(true)
+
+                            setTimeout(() => setShowSuccess(false), 3000)
+                            setTimeout(() => setSuccessMessage(""), 3600)
+                            }}
+                        />
+                        </div>
+
+                    </div>
+                    </div>
+                </div>
+            )}
+
+
+
+            {/* Show success message*/}
+            {successMessage && ( 
+                <div className={`alert alert-success alert-fade ${showSuccess ? "show" : ""}`}> {successMessage} </div>
+            )}
+            
             <table className="table table-stripped table-bordered">
                 <thead className="table-dark">
                     <tr>
@@ -88,7 +140,11 @@ function Movielist(){
                             <td>
                                 <>
                                     <button className="btn btn-sm btn-primary me-2" onClick={() => setEditingId(movie.id)}>Edit</button>
-                                    <button className="btn btn-sm btn-danger" onClick={() => deleteMovie(movie.id)}>Delete</button>
+                                    <button className="btn btn-sm btn-danger" onClick={() => {
+                                        if(window.confirm(`Are you sure you want to delete ${movie.title}?`)){
+                                            deleteMovie(movie.id)
+                                        }
+                                    }}>Delete </button>
                                 </>
                             </td>
                         </tr>

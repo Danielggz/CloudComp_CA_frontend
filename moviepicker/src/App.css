@@ -2,3 +2,13 @@
   min-height: 100vh;
   background: #f5f7fa; 
 }
+
+/* Fading in and out effect */
+.alert-fade { 
+  opacity: 0; 
+  transition: opacity 0.6s ease-in-out; 
+} 
+
+.alert-fade.show { 
+  opacity: 1; 
+}
