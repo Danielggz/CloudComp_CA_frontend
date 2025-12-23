@@ -6,6 +6,9 @@ function MovieNewForm({ onCreated }: { onCreated: (title: string) => void }){
     const [year, setYear] = useState('')
     const [duration, setDuration] = useState('')
     const [director, setDirector] = useState('')
+    const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
+    const localhost = 'http://localhost:3000/movies'
+    const cloud = 'http://100.52.28.229/movies'
 
     // error on api info
     const [apiError, setApiError] = useState("")
@@ -13,24 +16,29 @@ function MovieNewForm({ onCreated }: { onCreated: (title: string) => void }){
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        axios.post('http://100.52.28.229/movies', {title, year, duration, director})
+        axios.post(localhost, {title, year, duration, director})
         .then(function(){
             onCreated(title)
-
             setTitle('')
             setYear('')
             setDuration('')
             setDirector('')
+            setErrors({})
         })
         .catch(error => {
-            console.error("error when creating new movie", error)
+            if (error.response && error.response.data && error.response.data.errors) { 
+                setErrors(error.response.data.errors)
+            } 
+            else { 
+                console.error("error when creating new movie", error)
+            }
         })
     }
 
     const searchMovieAPI = (query: string, year: string) => {
         setApiError("") // clear previous errors
 
-        axios.get(`http://100.52.28.229/movies/search_api?title=${query}&year=${year}`)
+        axios.get(`${localhost}/search_api?title=${query}&year=${year}`)
         .then(response => {
             var data = response.data
 
@@ -51,7 +59,7 @@ function MovieNewForm({ onCreated }: { onCreated: (title: string) => void }){
                 return 
             }
         })
-        .catch(error => console.error("Error on retrieving api info: " + error))
+        .catch(error => setApiError("Please introduce a valid title to search"))
     }
 
     return(
@@ -60,12 +68,19 @@ function MovieNewForm({ onCreated }: { onCreated: (title: string) => void }){
                 <label htmlFor="" className="form-label">Title</label>
                 <input type="text" className="form-control" id="formTitle" aria-describedby="titleHelp" value={title} onChange={(e) => {setTitle(e.target.value)}} />
                 <div id="titleHelp" className="form-text">Title of the movie</div>
+                {errors.title && ( 
+                    <div className="alert alert-danger mt-2"> {errors.title.join(", ")} </div> 
+                )}
             </div>
             <div className="mb-3">
                 <label htmlFor="formYear" className="form-label">Year</label>
                 <input type="number" className="form-control" id="formYear" aria-describedby="yearHelp" value={year} onChange={(e)=> setYear(e.target.value)}/>
                 <div id="yearHelp" className="form-text">Year of release</div>
+                {errors.year && ( 
+                    <div className="alert alert-danger mt-2"> {errors.year.join(", ")} </div> 
+                )}
             </div>
+            
             <div className="mb-3">
                 <button type='button' className='btn btn-primary' onClick={() => searchMovieAPI(title, year)}> Search Movie </button>
                 <div id="searchHelp" className="form-text">Search for existing movies</div>

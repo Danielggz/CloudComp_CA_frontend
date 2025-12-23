@@ -6,8 +6,6 @@ import Movie_picked from './Movie_picked'
 
 function Movielist(){
 
-    const port = "http://100.52.28.229"
-
     const [movieList, setMovieList] = useState([]);
     //Edit Modal
     const [editingId, setEditingId] = useState<number | null>(null)
@@ -21,10 +19,14 @@ function Movielist(){
     const [successMessage, setSuccessMessage] = useState("")
     const [showSuccess, setShowSuccess] = useState(false)
 
+    //Local and cloud env
+    const localhost = 'http://localhost:3000/movies'
+    const cloud = 'http://100.52.28.229/movies'
+
     useEffect(getMovies, []);
 
     function getMovies(){
-        axios.get("http://100.52.28.229/movies",
+        axios.get(`${localhost}`,
             {headers: {Accept: "application/json"}}).then(response => {
                 setMovieList(response.data);
                 console.log(response.data)
@@ -35,13 +37,13 @@ function Movielist(){
     }
 
     function deleteMovie(id: number){
-        axios.delete(`http://100.52.28.229/movies/${id}`)
+        axios.delete(`${localhost}/${id}`)
         .then(getMovies)
         .catch(error => {console.error("Error deleting movie", error)})
     }
 
     function picker(){
-        axios.get("http://100.52.28.229/movies/moviePicker",
+        axios.get(`${localhost}/moviePicker`,
             {headers: {Accept: "application/json"}}).then(response => {
                 console.log(response.data)
                 setPickedMovie(response.data)
