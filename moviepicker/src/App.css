@@ -17,7 +17,7 @@
 .pickedModalTitle {
   margin-top: 20px;
   margin-bottom: 20px;
-  font-family: "Georgia", serif;   /* or any font you prefer */
-  color: #b22222;                  /* deep red, looks cinematic */
+  font-family: "Georgia", serif;
+  color: #b22222;
   text-align: center;
 }

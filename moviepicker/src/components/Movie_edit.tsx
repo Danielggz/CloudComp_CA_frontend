@@ -17,7 +17,7 @@ function MovieEditForm({
   // Load movie data when modal opens
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/movies/${movieId}`)
+      .get(`http://100.52.28.229/movies/${movieId}`)
       .then(res => {
         const m = res.data
         setTitle(m.title)
@@ -33,7 +33,7 @@ function MovieEditForm({
     e.preventDefault()
 
     axios
-      .put(`http://localhost:3000/movies/${movieId}`, {
+      .put(`http://100.52.28.229/movies/${movieId}`, {
         title,
         year,
         duration,

@@ -38,13 +38,12 @@ function pickedMovie({ res, onClose }: { res: any, onClose: () => void }) {
                             )}
                         
                             <h2 className="pickedModalTitle">{data.Title}</h2>
+                            <p className="text-center">{data.Plot}</p><br/>
                             <p><strong>Year:</strong> {data.Year}</p>
                             <p><strong>Runtime:</strong> {data.Runtime}</p>
                             <p><strong>Director:</strong> {data.Director}</p>
-                            <p><strong>Plot:</strong> {data.Plot}</p>
                             <p><strong>Actors:</strong> {data.Actors}</p>
                             <p><strong>IMDb Rating:</strong> {data.imdbRating}</p>
-                            <p><strong>Plot:</strong> {data.Plot}</p>
 
                             
                         </>

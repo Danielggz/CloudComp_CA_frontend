@@ -6,7 +6,6 @@ function MovieNewForm({ onCreated }: { onCreated: (title: string) => void }){
     const [year, setYear] = useState('')
     const [duration, setDuration] = useState('')
     const [director, setDirector] = useState('')
-    const [resultsAPI, setResultsAPI] = useState<any[]>([]) 
 
     // error on api info
     const [apiError, setApiError] = useState("")
@@ -14,7 +13,7 @@ function MovieNewForm({ onCreated }: { onCreated: (title: string) => void }){
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        axios.post('http://localhost:3000/movies', {title, year, duration, director})
+        axios.post('http://100.52.28.229/movies', {title, year, duration, director})
         .then(function(){
             onCreated(title)
 
@@ -31,11 +30,9 @@ function MovieNewForm({ onCreated }: { onCreated: (title: string) => void }){
     const searchMovieAPI = (query: string, year: string) => {
         setApiError("") // clear previous errors
 
-        axios.get(`http://localhost:3000/movies/searchAPI?title=${query}&year=${year}`)
+        axios.get(`http://100.52.28.229/movies/search_api?title=${query}&year=${year}`)
         .then(response => {
             var data = response.data
-            setResultsAPI(data)
-            console.log(data)
 
             if(data){
                 setTitle(data.Title || "")
