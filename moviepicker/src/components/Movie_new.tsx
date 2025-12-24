@@ -7,8 +7,10 @@ function MovieNewForm({ onCreated }: { onCreated: (title: string) => void }){
     const [duration, setDuration] = useState('')
     const [director, setDirector] = useState('')
     const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
-    const localhost = 'http://localhost:3000/movies'
-    const cloud = 'http://100.52.28.229/movies'
+    
+    // LOCALHOST: 'http://localhost:3000/movies'
+    // CLOUD: 'http://100.29.198.43/movies'
+    const PORT = 'http://100.29.198.43/movies'
 
     // error on api info
     const [apiError, setApiError] = useState("")
@@ -16,7 +18,7 @@ function MovieNewForm({ onCreated }: { onCreated: (title: string) => void }){
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        axios.post(localhost, {title, year, duration, director})
+        axios.post(PORT, {title, year, duration, director})
         .then(function(){
             onCreated(title)
             setTitle('')
@@ -38,7 +40,7 @@ function MovieNewForm({ onCreated }: { onCreated: (title: string) => void }){
     const searchMovieAPI = (query: string, year: string) => {
         setApiError("") // clear previous errors
 
-        axios.get(`${localhost}/search_api?title=${query}&year=${year}`)
+        axios.get(`${PORT}/search_api?title=${query}&year=${year}`)
         .then(response => {
             var data = response.data
 

@@ -20,13 +20,15 @@ function Movielist(){
     const [showSuccess, setShowSuccess] = useState(false)
 
     //Local and cloud env
-    const localhost = 'http://localhost:3000/movies'
-    const cloud = 'http://100.52.28.229/movies'
+    
+    // LOCALHOST: 'http://localhost:3000/movies'
+    // CLOUD: 'http://100.29.198.43/movies'
+    const PORT = 'http://100.29.198.43/movies'
 
     useEffect(getMovies, []);
 
     function getMovies(){
-        axios.get(`${localhost}`,
+        axios.get(`${PORT}`,
             {headers: {Accept: "application/json"}}).then(response => {
                 setMovieList(response.data);
                 console.log(response.data)
@@ -37,13 +39,13 @@ function Movielist(){
     }
 
     function deleteMovie(id: number){
-        axios.delete(`${localhost}/${id}`)
+        axios.delete(`${PORT}/${id}`)
         .then(getMovies)
         .catch(error => {console.error("Error deleting movie", error)})
     }
 
     function picker(){
-        axios.get(`${localhost}/moviePicker`,
+        axios.get(`${PORT}/moviePicker`,
             {headers: {Accept: "application/json"}}).then(response => {
                 console.log(response.data)
                 setPickedMovie(response.data)

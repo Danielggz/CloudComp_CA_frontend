@@ -1,25 +1,24 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-function MovieEditForm({
-    movieId,
-    onUpdated
-    }: {
+function MovieEditForm({movieId,onUpdated}: {
     movieId: number
-    onUpdated: (title: string) => void
-    }) {
-    const [title, setTitle] = useState('')
-    const [year, setYear] = useState('')
-    const [duration, setDuration] = useState('')
-    const [director, setDirector] = useState('')
-    const [loading, setLoading] = useState(true)
-    const localhost = 'http://localhost:3000/movies'
-    const cloud = 'http://100.52.28.229/movies'
+    onUpdated: (title: string) => void }) 
+    {
+        const [title, setTitle] = useState('')
+        const [year, setYear] = useState('')
+        const [duration, setDuration] = useState('')
+        const [director, setDirector] = useState('')
+        const [loading, setLoading] = useState(true)
+
+        // LOCALHOST: 'http://localhost:3000/movies'
+        // CLOUD: 'http://100.29.198.43/movies'
+        const PORT = 'http://100.29.198.43/movies'
 
     // Load movie data when modal opens
     useEffect(() => {
         axios
-        .get(`${localhost}/${movieId}`)
+        .get(`${PORT}/${movieId}`)
         .then(res => {
             const m = res.data
             setTitle(m.title)
@@ -35,7 +34,7 @@ function MovieEditForm({
         e.preventDefault()
 
         axios
-        .put(`${localhost}/${movieId}`, {
+        .put(`${PORT}/${movieId}`, {
             title,
             year,
             duration,
